@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->string('name');
             $table->string('species');
             $table->integer('age');
+            $table->foreignId('client_id')->constrained();
+
             $table->timestamps();
 
             $table->index(['species']);
