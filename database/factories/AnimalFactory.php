@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Animal;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Animal>
+ * @extends Factory<Animal>
  */
 class AnimalFactory extends Factory
 {
@@ -17,7 +18,9 @@ class AnimalFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->word(),
+            'species' => fake()->randomElement(['cat', 'dog', 'bird', 'fish']),
+            'age' => fake()->numberBetween(1, 20),
         ];
     }
 }

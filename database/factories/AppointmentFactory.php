@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Appointment>
+ * @extends Factory<\App\Models\Appointment>
  */
 class AppointmentFactory extends Factory
 {
@@ -17,7 +17,8 @@ class AppointmentFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'symptoms' => fake()->text(100),
+            'appointment_date' => fake()->dateTimeBetween('now', '+2 month'),
         ];
     }
 }
