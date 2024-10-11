@@ -17,6 +17,7 @@ class Appointment extends Model
         'user_id',
         'symptoms',
         'appointment_date',
+        'appointment_time',
     ];
 
     public function animal(): BelongsTo
@@ -35,6 +36,7 @@ class Appointment extends Model
             'user_id' => 'integer',
             'animal_id' => 'integer',
             'appointment_date' => 'date',
+            'appointment_time' => 'date',
         ];
     }
 

@@ -3,9 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\RoleName;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -39,6 +42,23 @@ class User extends Authenticatable
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
+    }
+
+    public function scopeRoleIs(Builder $query, RoleName $roleName): Builder
+    {
+        return $query->withWhereHas('roles', function ($query) use ($roleName) {
+            $query->where('name', $roleName->value);
+        });
+    }
+
+    public function scopeReceptionists(Builder $query): Builder
+    {
+        return $query->RoleIs(RoleName::RECEPTIONIST);
+    }
+
+    public function scopeVeterinaries(Builder $query): Builder
+    {
+        return $query->RoleIs(RoleName::VET);
     }
 
     /**
