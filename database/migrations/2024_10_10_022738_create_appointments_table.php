@@ -15,7 +15,8 @@ return new class extends Migration {
             $table->foreignId('animal_id')->constrained();
             $table->foreignId('user_id')->nullable()->constrained();
             $table->text('symptoms');
-            $table->dateTime('appointment_date');
+            $table->datetime('appointment_date');
+            $table->datetime('appointment_time');
             $table->timestamps();
 
             $table->index('appointment_date');

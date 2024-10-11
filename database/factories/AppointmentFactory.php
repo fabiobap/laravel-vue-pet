@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Appointment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<\App\Models\Appointment>
+ * @extends Factory<Appointment>
  */
 class AppointmentFactory extends Factory
 {
@@ -18,7 +19,8 @@ class AppointmentFactory extends Factory
     {
         return [
             'symptoms' => fake()->text(100),
-            'appointment_date' => fake()->dateTimeBetween('now', '+2 month'),
+            'appointment_date' => $dt = fake()->dateTimeBetween('now', '+2 month'),
+            'appointment_time' => $dt,
         ];
     }
 }
