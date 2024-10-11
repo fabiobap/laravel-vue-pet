@@ -5,5 +5,5 @@ namespace App\Enums;
 enum RoleName: string
 {
     case RECEPTIONIST = 'receptionist';
-    case VET = 'vet';
+    case VET = 'veterinary';
 }
