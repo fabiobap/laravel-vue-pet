@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\AppointmentPermission;
 use App\Enums\RoleName;
 use App\Models\Animal;
 use App\Models\Appointment;
@@ -26,19 +27,21 @@ class DatabaseSeeder extends Seeder
         $vet = Role::updateOrCreate(['name' => RoleName::VET->value]);
         $receptionist = Role::updateOrCreate(['name' => RoleName::RECEPTIONIST->value]);
 
-        $createAppointment = Permission::updateOrCreate(['name' => 'create appointments']);
-        $attachAppointment = Permission::updateOrCreate(['name' => 'attach appointments']);
-        $viewAppointment = Permission::updateOrCreate(['name' => 'view appointments']);
-        $editAppointment = Permission::updateOrCreate(['name' => 'edit appointments']);
-        $removeAppointment = Permission::updateOrCreate(['name' => 'remove appointments']);
+        $createAppointment = Permission::updateOrCreate(['name' => AppointmentPermission::CREATE->value]);
+        $attachAppointment = Permission::updateOrCreate(['name' => AppointmentPermission::ATTACH->value]);
+        $viewAppointment = Permission::updateOrCreate(['name' => AppointmentPermission::VIEW->value]);
+        $viewAnyAppointment = Permission::updateOrCreate(['name' => AppointmentPermission::VIEW_ANY->value]);
+        $editAppointment = Permission::updateOrCreate(['name' => AppointmentPermission::EDIT->value]);
+        $deleteAppointment = Permission::updateOrCreate(['name' => AppointmentPermission::DELETE->value]);
 
-        $vet->syncPermissions([$viewAppointment, $editAppointment]);
+        $vet->syncPermissions([$viewAppointment, $viewAnyAppointment, $editAppointment]);
         $receptionist->syncPermissions([
             $createAppointment,
+            $viewAnyAppointment,
             $viewAppointment,
             $editAppointment,
             $attachAppointment,
-            $removeAppointment
+            $deleteAppointment
         ]);
 
         User::factory(4)
