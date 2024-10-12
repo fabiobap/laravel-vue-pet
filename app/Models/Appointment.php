@@ -36,7 +36,7 @@ class Appointment extends Model
             'user_id' => 'integer',
             'animal_id' => 'integer',
             'appointment_date' => 'date',
-            'appointment_time' => 'date',
+            'appointment_time' => 'datetime',
         ];
     }
 
