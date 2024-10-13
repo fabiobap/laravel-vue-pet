@@ -1,28 +1,22 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import {Head, router} from '@inertiajs/vue3';
+import {Head, router, Link} from '@inertiajs/vue3';
 import {onMounted, ref, watch} from "vue";
 
 const props = defineProps({
     appointments: {
         type: Object,
+        default: () => {
+        },
+    },
+    headers: {
+        type: Array,
         default: () => [],
     },
     flash: String
 });
 
-const headers = [
-    {title: 'ID', key: 'id', align: 'start'},
-    {title: 'Time', key: 'appointment_time', align: 'start'},
-    {title: 'Date', key: 'appointment_date', align: 'start'},
-    {title: 'Animal', key: 'animal.name', align: 'start', sortable:false},
-    {title: 'Species', key: 'animal.species', align: 'start'},
-    {title: 'Client', key: 'animal.owner.name', align: 'start', sortable:false},
-    {title: 'Vet', key: 'veterinary.name', align: 'start', sortable:false},
-    {title: 'View', key: 'view', sortable: false},
-    {title: 'Edit', key: 'edit', sortable: false},
-    {title: 'Delete', key: 'delete', sortable: false},
-]
+const headers = ref(props.headers)
 
 const loading = ref(false)
 const flashMessage = ref(props.flash)
@@ -123,6 +117,17 @@ onMounted(() => {
                 >
                     <div class="p-6 text-gray-900">
                         <v-container>
+                            <v-col class="d-flex justify-end"
+                                   v-if="$page.props.auth.can.create_appointment"
+                            >
+                                <Link
+                                    class="bg-purple-darken-2 text-center v-btn v-btn--elevated v-theme--dark v-btn--density-default v-btn--size-small v-btn--variant-elevated"
+                                    :href="route('appointments.create')"
+                                    as="button"
+                                >
+                                    Create
+                                </Link>
+                            </v-col>
                             <v-data-table-server
                                 v-model:items-per-page="appointments.meta.per_page"
                                 :headers="headers"
@@ -146,7 +151,9 @@ onMounted(() => {
                                            @click="viewAppointment(item.id)">
                                     </v-btn>
                                 </template>
-                                <template v-slot:item.delete="{ item }">
+                                <template
+                                    v-slot:item.delete="{ item }"
+                                >
                                     <v-btn size="small" icon="mdi-delete" color="red-accent-4" variant="tonal"
                                            @click="openDialog(item.id)">
                                     </v-btn>

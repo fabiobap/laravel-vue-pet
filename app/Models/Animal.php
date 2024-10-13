@@ -16,7 +16,8 @@ class Animal extends Model
     protected $fillable = [
         'name',
         'species',
-        'age',
+        'birthdate',
+        'client_id',
     ];
 
     public function client(): BelongsTo
@@ -27,5 +28,18 @@ class Animal extends Model
     public function appointments(): HasMany
     {
         return $this->hasMany(Appointment::class);
+    }
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'birthdate' => 'date',
+            'client_id' => 'integer',
+        ];
     }
 }

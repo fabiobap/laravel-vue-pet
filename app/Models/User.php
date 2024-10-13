@@ -44,6 +44,16 @@ class User extends Authenticatable
         return $this->hasMany(Appointment::class);
     }
 
+    public function isReceptionist(): bool
+    {
+        return $this->hasRole(RoleName::RECEPTIONIST);
+    }
+
+    public function isVeterinary(): bool
+    {
+        return $this->hasRole(RoleName::VETERINARY);
+    }
+
     public function scopeRoleIs(Builder $query, RoleName $roleName): Builder
     {
         return $query->withWhereHas('roles', function ($query) use ($roleName) {
@@ -58,7 +68,7 @@ class User extends Authenticatable
 
     public function scopeVeterinaries(Builder $query): Builder
     {
-        return $query->RoleIs(RoleName::VET);
+        return $query->RoleIs(RoleName::VETERINARY);
     }
 
     /**

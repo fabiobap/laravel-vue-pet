@@ -20,7 +20,7 @@ class AnimalFactory extends Factory
         return [
             'name' => fake()->word(),
             'species' => fake()->randomElement(['cat', 'dog', 'bird', 'fish']),
-            'age' => fake()->numberBetween(1, 20),
+            'birthdate' => fake()->dateTimeBetween('-20 years'),
         ];
     }
 }

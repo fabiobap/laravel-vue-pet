@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-        $vet = Role::updateOrCreate(['name' => RoleName::VET->value]);
+        $vet = Role::updateOrCreate(['name' => RoleName::VETERINARY->value]);
         $receptionist = Role::updateOrCreate(['name' => RoleName::RECEPTIONIST->value]);
 
         $createAppointment = Permission::updateOrCreate(['name' => AppointmentPermission::CREATE->value]);
@@ -45,9 +45,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory(4)
+            ->vet()
             ->hasAttached($vet)
             ->create();
         User::factory()
+            ->receptionist()
             ->hasAttached($receptionist)
             ->create();
 
@@ -58,7 +60,7 @@ class DatabaseSeeder extends Seeder
             ->state(new Sequence(
                 ['animal_id' => Animal::all()->random()],
                 fn(Sequence $sequence) => ['animal_id' => Animal::all()->random(), 'user_id' => User::whereHas('roles', function (Builder $query) {
-                    $query->where('name', '=', RoleName::VET->value);
+                    $query->where('name', '=', RoleName::VETERINARY->value);
                 })->get()->random()],
             ))
             ->create();

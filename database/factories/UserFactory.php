@@ -37,8 +37,24 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    public function receptionist(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'name' => 'Vet ' . fake()->name(),
+            'email' => 'receptionist_' . fake()->unique()->safeEmail(),
+        ]);
+    }
+
+    public function vet(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'name' => 'Receptionist ' . fake()->name(),
+            'email' => 'vet_' . fake()->unique()->safeEmail(),
         ]);
     }
 }

@@ -1,13 +1,9 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import {Head, useForm} from '@inertiajs/vue3';
+import {Head, Link, useForm} from '@inertiajs/vue3';
 import {ref} from "vue";
-import moment from "moment";
 
 const props = defineProps({
-    appointment: {
-        type: Object
-    },
     veterinaries: {
         type: Array,
         default: () => [],
@@ -15,22 +11,32 @@ const props = defineProps({
 });
 
 const loading = ref(false)
-console.log(props.appointment)
 
 const form = useForm({
-    appointment_date: moment(props.appointment.appointment_date_raw).toDate(),
-    appointment_time: props.appointment.appointment_time_raw,
-    symptoms: props.appointment.symptoms,
-    user_id: props.appointment.veterinary?.id,
-    animal_id: props.appointment.animal.id,
+    client: {
+        name: null,
+        email: null,
+    },
+    animal: {
+        name: null,
+        birthdate: null,
+        species: null,
+    },
+    appointment: {
+        appointment_date: null,
+        appointment_time: null,
+        symptoms: null,
+        user_id: null,
+    }
 });
 
-const errors = ref({});
+const errors = ref({client: {}, animal: {}, appointment: {}});
 const menuTimer = ref(false);
-const menuDate = ref(false);
+const menuDateAppointment = ref(false);
+const menuBirthdate = ref(false);
 
 const submit = () => {
-    form.put(route('appointments.update', props.appointment.id), {
+    form.post(route('appointments.store'), {
         onError: (error) => {
             errors.value = error;
         },
@@ -68,7 +74,7 @@ const goBack = () => {
                         <v-container>
                             <v-card>
                                 <v-card-title>
-                                    Edit Appointment
+                                    Create Appointment
                                 </v-card-title>
                                 <v-card-text>
                                     <v-form @submit.prevent="submit">
@@ -79,9 +85,10 @@ const goBack = () => {
                                                     md="4"
                                                 >
                                                     <v-text-field
-                                                        v-model="appointment.animal.name"
-                                                        label="Patient"
-                                                        readonly
+                                                        v-model="form.client.name"
+                                                        label="Tutor's name"
+                                                        :error-messages="errors['client.name']"
+                                                        required
                                                     ></v-text-field>
                                                 </v-col>
                                                 <v-col
@@ -89,9 +96,9 @@ const goBack = () => {
                                                     md="4"
                                                 >
                                                     <v-text-field
-                                                        v-model="form.symptoms"
-                                                        label="Symptoms"
-                                                        :error-messages="errors.symptoms"
+                                                        v-model="form.client.email"
+                                                        label="Tutor's email"
+                                                        :error-messages="errors['client.email']"
                                                         required
                                                     ></v-text-field>
                                                 </v-col>
@@ -101,38 +108,60 @@ const goBack = () => {
                                                 >
                                                     <v-select
                                                         :disabled="!$page.props.auth.can.attach_appointment"
-                                                        v-model="form.user_id"
+                                                        v-model="form.appointment.user_id"
                                                         :items="veterinaries"
                                                         item-title="name"
                                                         item-value="id"
                                                         label="Veterinary"
                                                         variant="underlined"
-                                                        :error-messages="errors.user_id"
+                                                        :error-messages="errors['appointment.user_id']"
                                                         required
                                                     ></v-select>
                                                 </v-col>
                                                 <v-col
                                                     cols="12"
-                                                    md="6"
+                                                    md="4"
+                                                >
+                                                    <v-text-field
+                                                        v-model="form.animal.name"
+                                                        label="Pet's name"
+                                                        :error-messages="errors['animal.name']"
+                                                        required
+                                                    ></v-text-field>
+                                                </v-col>
+                                                <v-col
+                                                    cols="12"
+                                                    md="4"
+                                                >
+                                                    <v-text-field
+                                                        v-model="form.animal.species"
+                                                        label="Pet's species"
+                                                        :error-messages="errors['animal.species']"
+                                                        required
+                                                    ></v-text-field>
+                                                </v-col>
+                                                <v-col
+                                                    cols="12"
+                                                    md="4"
                                                 >
                                                     <v-text-field
                                                         variant="underlined"
-                                                        label="Appointment Date"
-                                                        v-model="form.appointment_date"
-                                                        :active="menuDate"
+                                                        label="Pet's birthday"
+                                                        v-model="form.animal.birthdate"
+                                                        :active="menuBirthdate"
                                                         prepend-icon="$calendar"
                                                         readonly
-                                                        :error-messages="errors.appointment_date"
+                                                        :error-messages="errors['animal.birthdate']"
                                                     >
                                                         <v-menu
-                                                            v-model="menuDate"
+                                                            v-model="menuBirthdate"
                                                             :close-on-content-click="false"
                                                             activator="parent"
                                                             transition="scale-transition"
                                                         >
                                                             <v-date-picker
-                                                                v-if="menuDate"
-                                                                v-model="form.appointment_date"/>
+                                                                v-if="menuBirthdate"
+                                                                v-model="form.animal.birthdate"/>
                                                         </v-menu>
                                                     </v-text-field>
                                                 </v-col>
@@ -142,12 +171,37 @@ const goBack = () => {
                                                 >
                                                     <v-text-field
                                                         variant="underlined"
-                                                        v-model="form.appointment_time"
+                                                        label="Appointment Date"
+                                                        v-model="form.appointment.appointment_date"
+                                                        :active="menuDateAppointment"
+                                                        prepend-icon="$calendar"
+                                                        readonly
+                                                        :error-messages="errors['appointment.appointment_date']"
+                                                    >
+                                                        <v-menu
+                                                            v-model="menuDateAppointment"
+                                                            :close-on-content-click="false"
+                                                            activator="parent"
+                                                            transition="scale-transition"
+                                                        >
+                                                            <v-date-picker
+                                                                v-if="menuDateAppointment"
+                                                                v-model="form.appointment.appointment_date"/>
+                                                        </v-menu>
+                                                    </v-text-field>
+                                                </v-col>
+                                                <v-col
+                                                    cols="12"
+                                                    md="6"
+                                                >
+                                                    <v-text-field
+                                                        variant="underlined"
+                                                        v-model="form.appointment.appointment_time"
                                                         :active="menuTimer"
                                                         label="Appointment time"
                                                         prepend-icon="mdi-clock-time-four-outline"
                                                         readonly
-                                                        :error-messages="errors.appointment_time"
+                                                        :error-messages="errors['appointment.appointment_time']"
                                                     >
                                                         <v-menu
                                                             v-model="menuTimer"
@@ -157,15 +211,28 @@ const goBack = () => {
                                                         >
                                                             <v-time-picker
                                                                 v-if="menuTimer"
-                                                                v-model="form.appointment_time"
+                                                                v-model="form.appointment.appointment_time"
                                                                 full-width
                                                                 format="24hr"
                                                             ></v-time-picker>
                                                         </v-menu>
                                                     </v-text-field>
                                                 </v-col>
+                                                <v-col
+                                                    cols="12"
+                                                    md="12"
+                                                >
+                                                    <v-text-field
+                                                        v-model="form.appointment.symptoms"
+                                                        label="Symptoms"
+                                                        :error-messages="errors['appointment.symptoms']"
+                                                        required
+                                                    ></v-text-field>
+                                                </v-col>
                                                 <v-col cols="auto">
-                                                <v-btn :loading="loading" type="submit" color="primary">Update</v-btn>
+                                                    <v-btn :loading="loading" type="submit" color="primary">
+                                                        Send
+                                                    </v-btn>
                                                 </v-col>
                                                 <v-col cols="auto">
                                                     <v-btn :loading="loading"  @click="goBack" color="grey-darken-1">Go Back</v-btn>

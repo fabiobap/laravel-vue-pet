@@ -6,7 +6,6 @@ use App\Enums\AppointmentPermission;
 use App\Enums\RoleName;
 use App\Models\Appointment;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class AppointmentPolicy
 {

@@ -1,23 +1,22 @@
 <?php
 
+
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WelcomeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-//        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::get('/', WelcomeController::class)->name('welcome.create');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+
+Route::post('/public/appointments', [AppointmentController::class, 'publicStore'])
+    ->name('public.appointments.store');
 
 Route::middleware('auth')->group(function () {
     Route::resource('/appointments', AppointmentController::class);

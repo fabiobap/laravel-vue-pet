@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import {Head, router, useForm} from '@inertiajs/vue3';
+import {Head} from '@inertiajs/vue3';
 
 const props = defineProps({
     appointment: {
@@ -53,7 +53,7 @@ const goBack = () => {
                                             <strong>Species:</strong> {{ appointment.animal.species }}
                                         </v-col>
                                         <v-col cols="12" md="6">
-                                            <strong>Age:</strong> {{ appointment.animal.age }}
+                                            <strong>Age:</strong> {{ appointment.animal.birthdate }}
                                         </v-col>
                                         <v-col cols="12" md="12">
                                             <strong>Symptoms:</strong> {{ appointment.symptoms }}
@@ -61,7 +61,7 @@ const goBack = () => {
                                     </v-row>
                                 </v-card-text>
                                 <v-card-actions>
-                                    <v-btn @click="goBack" color="primary">Go Back</v-btn>
+                                    <v-btn @click="goBack" color="grey-darken-1">Go Back</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-container>
