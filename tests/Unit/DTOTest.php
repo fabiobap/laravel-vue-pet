@@ -1,5 +1,5 @@
 <?php
-
+namespace Tests\Unit;
 
 use App\DTO\AnimalDTO;
 use App\DTO\AppointmentDTO;
