@@ -45,7 +45,7 @@ class UserFactory extends Factory
     public function receptionist(): static
     {
         return $this->state(fn(array $attributes) => [
-            'name' => 'Vet ' . fake()->name(),
+            'name' => 'Receptionist ' . fake()->name(),
             'email' => 'receptionist_' . fake()->unique()->safeEmail(),
         ]);
     }
@@ -53,7 +53,7 @@ class UserFactory extends Factory
     public function vet(): static
     {
         return $this->state(fn(array $attributes) => [
-            'name' => 'Receptionist ' . fake()->name(),
+            'name' => 'Vet ' . fake()->name(),
             'email' => 'vet_' . fake()->unique()->safeEmail(),
         ]);
     }

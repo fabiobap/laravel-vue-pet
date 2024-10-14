@@ -229,7 +229,7 @@ onMounted(() => {
                                                                 variant="underlined"
                                                                 v-model="form.appointment.appointment_time"
                                                                 :active="menuTimer"
-                                                                label="Appointment time"
+                                                                label="Appointment Time"
                                                                 prepend-icon="mdi-clock-time-four-outline"
                                                                 readonly
                                                                 :error-messages="errors['appointment.appointment_time']"
